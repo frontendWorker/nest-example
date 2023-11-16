@@ -7,14 +7,16 @@ import {
 import { Request, Response } from 'express';
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost): any {
+  catch(exception: HttpException, host: ArgumentsHost): any {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status = exception.getStats();
-    response.status(status).json({
+    console.log(JSON.stringify(exception));
+    const status = exception.getStatus();
+    response.status(200).json({
       status,
-      timestamp: new Date().toString(),
+      message: response.statusMessage,
+      timestamp: Date.now(),
       path: request.url,
     });
   }
